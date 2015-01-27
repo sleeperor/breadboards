@@ -4,7 +4,7 @@ from serial import Serial
 prev = [0, 0, 0, 0, 0, 0, 0]
 
 
-with Serial('/dev/ttyACM0', 19200, timeout=1) as ttyACM0:
+with Serial('/dev/ttyACM0', 115200, timeout=1) as ttyACM0:
   while True:
     with open('/proc/stat') as stat:
       current = map(lambda x: int(x), stat.readline().split()[1:-3])
@@ -14,9 +14,9 @@ with Serial('/dev/ttyACM0', 19200, timeout=1) as ttyACM0:
       time_idle = diff[3]
       time_busy = time_all - time_idle
 
-      val_busy = ((time_all - time_idle) * 256) / time_all
+      val_busy = ((time_all - time_idle) * 255) / time_all
       
-      ttyACM0.write(str(val_busy))
+      ttyACM0.write(chr(val_busy))
       
-    sleep(0.1)
+    sleep(0.25)
 
